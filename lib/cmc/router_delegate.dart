@@ -16,9 +16,12 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:cmc/cmc/app_path.dart';
 import 'package:cmc/cmc/cmc_path.dart';
+import 'package:cmc/cmc/transition_delegate.dart';
 import 'package:cmc/data/login_info.dart';
 import 'package:cmc/pages/pages.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,43 +29,46 @@ class CMCRouterDelegate extends RouterDelegate<CMCPath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<CMCPath> {
   final GlobalKey<NavigatorState> navigatorKey;
 
-  CMCPath _currentPath = CMCPath.home();
+  // AppPath _currentPath = AppPath(CMCPath.home());
 
   CMCRouterDelegate() : navigatorKey = GlobalKey<NavigatorState>();
+
+  CMCPath _currentPath = CMCPath.home();
 
   CMCPath get currentConfiguration => _currentPath;
   late CMCLoginInfo loginState;
 
+  final simplePages = <CMCPathType, Page>{
+    CMCPathType.Home: HomePage(),
+    CMCPathType.Login: LoginPage(),
+    CMCPathType.ChatOverview: ChatPage(),
+    CMCPathType.GroupOverview: GroupsPage(),
+    CMCPathType.Unknown: UnknownPage()
+  };
+
+  final complexPages = <CMCPathType, Page Function(String)>{
+    CMCPathType.Settings: (id) => SettingsPage(id),
+    CMCPathType.OpenChat: (id) => OpenChatPage(id),
+    CMCPathType.OpenGroup: (id) => OpenGroupPage(id),
+  };
+
   @override
   Widget build(BuildContext context) {
-    loginState = Provider.of<CMCLoginInfo>(context, listen: true);
+    loginState = Provider.of<CMCLoginInfo>(context, listen: false);
+    Provider.of<AppPath>(context, listen: false).addListener(() {
+      _currentPath = Provider.of<AppPath>(context, listen: false).path;
+      notifyListeners();
+    });
 
     return Navigator(
       key: navigatorKey,
+      transitionDelegate: CMCTransitionDelegate(),
       pages: [
         LoadingPage(),
-        if (!loginState.isLoggedIn && currentConfiguration.isLogin)
-          LoginPage()
-        else if (!loginState.isLoggedIn)
-          DeniedPage()
-        else if (loginState.isLoggedIn && currentConfiguration.isHome)
-          HomePage()
-        else if (loginState.isLoggedIn && currentConfiguration.isChatOverview)
-          ChatPage()
-        else if (loginState.isLoggedIn && currentConfiguration.isGroupOverview)
-          GroupsPage()
-        else if (loginState.isLoggedIn &&
-            currentConfiguration.isSettings &&
-            currentConfiguration.id != null)
-          SettingsPage(currentConfiguration.id!)
-        else if (loginState.isLoggedIn &&
-            currentConfiguration.isOpenChat &&
-            currentConfiguration.id != null)
-          OpenChatPage(currentConfiguration.id!)
-        else if (loginState.isLoggedIn &&
-            currentConfiguration.isOpenGroup &&
-            currentConfiguration.id != null)
-          OpenGroupPage(currentConfiguration.id!)
+        if (currentConfiguration.isSimple)
+          simplePages[currentConfiguration.pathType]!
+        else
+          complexPages[currentConfiguration.pathType]!(currentConfiguration.id!)
       ],
       onPopPage: (route, result) {
         if (!route.didPop(result)) {
@@ -76,12 +82,13 @@ class CMCRouterDelegate extends RouterDelegate<CMCPath>
   }
 
   @override
-  Future<void> setNewRoutePath(CMCPath configuration) async {
+  SynchronousFuture<void> setNewRoutePath(CMCPath configuration) {
     if (loginState.isLoggedIn) {
       _currentPath = configuration;
     } else {
       _currentPath = CMCPath.login();
     }
     notifyListeners();
+    return SynchronousFuture<void>(null);
   }
 }

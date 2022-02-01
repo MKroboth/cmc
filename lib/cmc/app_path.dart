@@ -16,26 +16,18 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/cmc/app_path.dart';
 import 'package:cmc/cmc/cmc_path.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/cupertino.dart';
 
-class AppNavbar extends StatelessWidget {
-  final int selectedIndex;
+class AppPath with ChangeNotifier {
+  AppPath(this._path);
 
-  AppNavbar({required this.selectedIndex});
+  CMCPath _path;
 
-  @override
-  Widget build(BuildContext context) => NavigationBar(
-    destinations: [
-          NavigationDestination(icon: Icon(Icons.chat), label: "Chat"),
-          NavigationDestination(icon: Icon(Icons.group), label: "Groups"),
-        ],
-        selectedIndex: selectedIndex,
-        onDestinationSelected: (destination) {
-          Provider.of<AppPath>(context, listen: false).path =
-              [CMCPath.chatOverview(), CMCPath.groupOverview()][destination];
-        },
-      );
+  CMCPath get path => _path;
+
+  set path(value) {
+    _path = value;
+    notifyListeners();
+  }
 }

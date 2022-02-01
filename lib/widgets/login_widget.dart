@@ -16,8 +16,8 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:cmc/cmc/app_path.dart';
 import 'package:cmc/cmc/cmc_path.dart';
-import 'package:cmc/cmc/navigator.dart';
 import 'package:cmc/data/login_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
@@ -38,10 +38,10 @@ class LoginWidget extends StatelessWidget {
       messages: LoginMessages(userHint: "Matrix ID"),
       userType: LoginUserType.name,
       onSubmitAnimationCompleted: () {
-        Future.delayed(
-            Duration.zero,
-            () =>
-                RouteNavigator.of(context).navigateTo(CMCPath.chatOverview()));
+        print("Logged in.");
+        Provider.of<AppPath>(context, listen: false).path =
+            CMCPath.chatOverview();
+        Navigator.pop(context);
       },
       userValidator: (input) {
         if (input == null) return "Empty Matrix ID";

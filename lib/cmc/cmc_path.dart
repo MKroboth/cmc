@@ -88,4 +88,12 @@ class CMCPath {
   bool get isSettings => isValid && pathType == CMCPathType.Settings;
 
   bool get isInvalid => !isValid;
+
+  bool get isComplex => [
+        CMCPathType.OpenGroup,
+        CMCPathType.OpenChat,
+        CMCPathType.Settings
+      ].contains(pathType);
+
+  bool get isSimple => !isComplex;
 }
