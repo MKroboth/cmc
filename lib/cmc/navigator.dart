@@ -16,23 +16,19 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/cmc/app_content.dart';
-import 'package:cmc/providers/login_provider.dart' as login_provider;
-import 'package:cmc/providers/theme_provider.dart' as theme_provider;
+library route_navigator;
+
+import 'package:cmc/cmc/cmc_path.dart';
+import 'package:cmc/cmc/router_delegate.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class CMCApp extends StatelessWidget {
-  // This widget is the root of your application.
-  // Use it to configure providers
-  // for CMCAppContent.
+class RouteNavigator {
+  late final CMCRouterDelegate _delegate;
 
-  @override
-  Widget build(BuildContext context) => MultiProvider(
-        providers: [
-          theme_provider.provider,
-          login_provider.provider,
-        ],
-        child: CMCAppContent(),
-      );
+  RouteNavigator.of(BuildContext context)
+      : this._delegate = Router.of(context).routerDelegate as CMCRouterDelegate;
+
+  Future<void> navigateTo(CMCPath path) async {
+    await _delegate.setNewRoutePath(path);
+  }
 }

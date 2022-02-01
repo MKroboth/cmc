@@ -16,23 +16,17 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/cmc/app_content.dart';
-import 'package:cmc/providers/login_provider.dart' as login_provider;
-import 'package:cmc/providers/theme_provider.dart' as theme_provider;
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class CMCApp extends StatelessWidget {
-  // This widget is the root of your application.
-  // Use it to configure providers
-  // for CMCAppContent.
+class SettingsScreen extends StatelessWidget {
+  final String settingsPath;
+
+  SettingsScreen(this.settingsPath);
 
   @override
-  Widget build(BuildContext context) => MultiProvider(
-        providers: [
-          theme_provider.provider,
-          login_provider.provider,
-        ],
-        child: CMCAppContent(),
+  Widget build(BuildContext context) => Scaffold(
+        body: Center(
+          child: Text("Settings '$settingsPath'"),
+        ),
       );
 }

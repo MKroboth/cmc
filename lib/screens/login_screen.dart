@@ -16,23 +16,23 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/cmc/app_content.dart';
-import 'package:cmc/providers/login_provider.dart' as login_provider;
-import 'package:cmc/providers/theme_provider.dart' as theme_provider;
+import 'package:cmc/cmc/open_url.dart'
+    if (dart.library.web) 'package:cmc/cmc/open_url_web.dart';
+import 'package:cmc/widgets/login_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class CMCApp extends StatelessWidget {
-  // This widget is the root of your application.
-  // Use it to configure providers
-  // for CMCAppContent.
-
+class LoginScreen extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => MultiProvider(
-        providers: [
-          theme_provider.provider,
-          login_provider.provider,
+  Widget build(BuildContext context) => Scaffold(
+        body: LoginWidget(),
+        persistentFooterButtons: [
+          ElevatedButton(
+            onPressed: () async {
+              const url = "https://github.com/MKroboth/cmc";
+              openURL(url);
+            },
+            child: Text("Get the source!"),
+          ),
         ],
-        child: CMCAppContent(),
       );
 }

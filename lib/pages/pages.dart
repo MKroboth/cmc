@@ -16,23 +16,15 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/cmc/app_content.dart';
-import 'package:cmc/providers/login_provider.dart' as login_provider;
-import 'package:cmc/providers/theme_provider.dart' as theme_provider;
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+library pages;
 
-class CMCApp extends StatelessWidget {
-  // This widget is the root of your application.
-  // Use it to configure providers
-  // for CMCAppContent.
-
-  @override
-  Widget build(BuildContext context) => MultiProvider(
-        providers: [
-          theme_provider.provider,
-          login_provider.provider,
-        ],
-        child: CMCAppContent(),
-      );
-}
+export 'chat_page.dart';
+export 'denied_page.dart';
+export 'groups_page.dart';
+export 'home_page.dart';
+export 'loading_page.dart';
+export 'login_page.dart';
+export 'open_chat_page.dart';
+export 'open_group_page.dart';
+export 'settings_page.dart';
+export 'unknown_page.dart';

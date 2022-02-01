@@ -16,23 +16,23 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/cmc/app_content.dart';
-import 'package:cmc/providers/login_provider.dart' as login_provider;
-import 'package:cmc/providers/theme_provider.dart' as theme_provider;
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class CMCApp extends StatelessWidget {
-  // This widget is the root of your application.
-  // Use it to configure providers
-  // for CMCAppContent.
+abstract class CMCTheme with ChangeNotifier {
+  ThemeData asThemeData();
+
+  factory CMCTheme.loadDefault() => _CMCThemeImpl(_CMCThemeImpl._defaultTheme);
+}
+
+class _CMCThemeImpl with ChangeNotifier implements CMCTheme {
+  static ThemeData _defaultTheme = ThemeData(
+    primarySwatch: Colors.green,
+  );
+
+  _CMCThemeImpl(ThemeData initialValue) : _value = initialValue;
+
+  ThemeData _value;
 
   @override
-  Widget build(BuildContext context) => MultiProvider(
-        providers: [
-          theme_provider.provider,
-          login_provider.provider,
-        ],
-        child: CMCAppContent(),
-      );
+  ThemeData asThemeData() => _value;
 }

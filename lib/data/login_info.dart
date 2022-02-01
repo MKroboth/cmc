@@ -16,23 +16,25 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/cmc/app_content.dart';
-import 'package:cmc/providers/login_provider.dart' as login_provider;
-import 'package:cmc/providers/theme_provider.dart' as theme_provider;
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/cupertino.dart';
 
-class CMCApp extends StatelessWidget {
-  // This widget is the root of your application.
-  // Use it to configure providers
-  // for CMCAppContent.
+class CMCLoginInfo with ChangeNotifier {
+  bool get isLoggedIn => _loggedIn;
 
-  @override
-  Widget build(BuildContext context) => MultiProvider(
-        providers: [
-          theme_provider.provider,
-          login_provider.provider,
-        ],
-        child: CMCAppContent(),
-      );
+  String get username => _username;
+
+  bool _loggedIn = false;
+  String _username = "";
+
+  String? login(String username, String password) {
+    // TODO Login.
+    _loggedIn = true;
+
+    if (_loggedIn) {
+      _username = username;
+      notifyListeners();
+      return null;
+    } else
+      return "Unknown Error";
+  }
 }

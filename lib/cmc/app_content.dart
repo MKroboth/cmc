@@ -16,23 +16,27 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/cmc/app_content.dart';
-import 'package:cmc/providers/login_provider.dart' as login_provider;
-import 'package:cmc/providers/theme_provider.dart' as theme_provider;
+import 'package:cmc/cmc/route_information_parser.dart';
+import 'package:cmc/cmc/router_delegate.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class CMCApp extends StatelessWidget {
-  // This widget is the root of your application.
-  // Use it to configure providers
-  // for CMCAppContent.
-
+class CMCAppContent extends StatefulWidget {
   @override
-  Widget build(BuildContext context) => MultiProvider(
-        providers: [
-          theme_provider.provider,
-          login_provider.provider,
-        ],
-        child: CMCAppContent(),
-      );
+  State<StatefulWidget> createState() => _CMCAppContentState();
+}
+
+class _CMCAppContentState extends State<CMCAppContent> {
+  CMCRouterDelegate _routerDelegate = CMCRouterDelegate();
+  CMCRouteInformationParser _routeInformationParser =
+      CMCRouteInformationParser();
+
+  // This widget contains the real content of the app.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      title: 'Cactis Matrix Client',
+      routerDelegate: _routerDelegate,
+      routeInformationParser: _routeInformationParser,
+    );
+  }
 }
