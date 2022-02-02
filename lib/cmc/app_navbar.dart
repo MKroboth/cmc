@@ -28,7 +28,7 @@ class AppNavbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => NavigationBar(
-    destinations: [
+        destinations: [
           NavigationDestination(icon: Icon(Icons.chat), label: "Chat"),
           NavigationDestination(icon: Icon(Icons.group), label: "Groups"),
         ],

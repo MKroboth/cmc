@@ -16,10 +16,15 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
-import 'cmc/app.dart';
+@immutable
+class LoginError implements Exception {
+  final String _message;
 
-void main() async {
-  runApp(CMCApp());
+  LoginError(this._message);
+
+  String get message => _message;
+
+  String error() => "Login Error: $_message";
 }

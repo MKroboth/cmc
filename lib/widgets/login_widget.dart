@@ -19,11 +19,15 @@
 import 'package:cmc/cmc/app_path.dart';
 import 'package:cmc/cmc/cmc_path.dart';
 import 'package:cmc/data/login_info.dart';
+import 'package:cmc/logic/login_error.dart';
+import 'package:cmc/logic/login_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:provider/provider.dart';
 
 class LoginWidget extends StatelessWidget {
+  LoginManager _loginManager = LoginManager();
+
   @override
   Widget build(BuildContext context) {
     final login = FlutterLogin(
@@ -32,24 +36,30 @@ class LoginWidget extends StatelessWidget {
         return null;
       },
       onLogin: (LoginData loginData) async {
-        return Provider.of<CMCLoginInfo>(context, listen: false)
-            .login(loginData.name, loginData.password);
+        try {
+          final status =
+              await _loginManager.login(loginData.name, loginData.password);
+          Provider.of<CMCLoginInfo>(context, listen: false).loginStatus =
+              status;
+        } on LoginError catch (e) {
+          return e.error();
+        }
+        return null;
       },
       messages: LoginMessages(userHint: "Matrix ID"),
       userType: LoginUserType.name,
       onSubmitAnimationCompleted: () {
-        print("Logged in.");
+        Navigator.pop(context);
         Provider.of<AppPath>(context, listen: false).path =
             CMCPath.chatOverview();
-        Navigator.pop(context);
       },
       userValidator: (input) {
-        if (input == null) return "Empty Matrix ID";
-
-        if (input.startsWith("@"))
-          return null;
-        else
-          return "Invalid Matrix ID";
+        try {
+          _loginManager.validateUsername(input);
+        } on LoginError catch (e) {
+          return e.message;
+        }
+        return null;
       },
     );
 

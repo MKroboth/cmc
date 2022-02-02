@@ -17,16 +17,35 @@
  */
 
 import 'package:cmc/cmc/app_navbar.dart';
+import 'package:cmc/data/login_info.dart';
+import 'package:cmc/widgets/group_overview_list_item.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class GroupsScreen extends StatelessWidget {
+class GroupsScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Center(
-          child: Text("Groups"),
-        ),
-        bottomNavigationBar: AppNavbar(
-          selectedIndex: 1,
-        ),
-      );
+  State<StatefulWidget> createState() => _GroupsScreenState();
+}
+
+class _GroupsScreenState extends State<GroupsScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final loginInfo = Provider.of<CMCLoginInfo>(context);
+    final client = loginInfo.loginStatus?.client;
+    final entries = client!.rooms
+        .where((element) => !element.isDirectChat)
+        .toList(growable: false);
+
+    return Scaffold(
+      body: ListView.builder(
+        itemBuilder: (context, index) {
+          return RoomOverviewListItem(client, entries[index]);
+        },
+        itemCount: entries.length,
+      ),
+      bottomNavigationBar: AppNavbar(
+        selectedIndex: 1,
+      ),
+    );
+  }
 }

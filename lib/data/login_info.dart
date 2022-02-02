@@ -16,25 +16,34 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:matrix/matrix.dart' as matrix;
 
 class CMCLoginInfo with ChangeNotifier {
-  bool get isLoggedIn => _loggedIn;
+  CMCLoginStatus? _loginStatus;
 
-  String get username => _username;
+  CMCLoginStatus? get loginStatus => _loginStatus;
 
-  bool _loggedIn = false;
-  String _username = "";
-
-  String? login(String username, String password) {
-    // TODO Login.
-    _loggedIn = true;
-
-    if (_loggedIn) {
-      _username = username;
-      notifyListeners();
-      return null;
-    } else
-      return "Unknown Error";
+  set loginStatus(value) {
+    _loginStatus = value;
+    notifyListeners();
   }
+
+  bool get isLoggedIn => _loginStatus != null;
+}
+
+@immutable
+class CMCLoginStatus {
+  final String accessToken;
+  final String deviceId;
+  final String homeServer;
+  final String userId;
+  final matrix.Client client;
+
+  const CMCLoginStatus(
+      {required this.accessToken,
+      required this.deviceId,
+      required this.homeServer,
+      required this.userId,
+      required this.client});
 }

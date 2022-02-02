@@ -17,16 +17,34 @@
  */
 
 import 'package:cmc/cmc/app_navbar.dart';
+import 'package:cmc/data/login_info.dart';
+import 'package:cmc/widgets/ChatOverviewListItem.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Center(
-          child: Text("Chat"),
-        ),
-        bottomNavigationBar: AppNavbar(
-          selectedIndex: 0,
-        ),
-      );
+  State<StatefulWidget> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final loginInfo = Provider.of<CMCLoginInfo>(context);
+    final client = loginInfo.loginStatus?.client;
+    final entries = client!.directChats.entries.toList(growable: false);
+
+    return Scaffold(
+      body: ListView.builder(
+        itemBuilder: (context, index) {
+          return ChatOverviewListItem(
+              client, entries[index].key, entries[index].value.first);
+        },
+        itemCount: entries.length,
+      ),
+      bottomNavigationBar: AppNavbar(
+        selectedIndex: 0,
+      ),
+    );
+  }
 }
