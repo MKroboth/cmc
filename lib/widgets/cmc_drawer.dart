@@ -16,27 +16,15 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/cmc/app_path.dart';
-import 'package:cmc/cmc/cmc_path.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-@Deprecated("")
-class AppNavbar extends StatelessWidget {
-  final int selectedIndex;
+class CMCDrawer extends StatelessWidget {
+  final Widget child;
 
-  AppNavbar({required this.selectedIndex});
+  CMCDrawer({required this.child});
 
   @override
-  Widget build(BuildContext context) => NavigationBar(
-    destinations: [
-      NavigationDestination(icon: Icon(Icons.chat), label: "Chat"),
-      NavigationDestination(icon: Icon(Icons.group), label: "Groups"),
-    ],
-    selectedIndex: selectedIndex,
-    onDestinationSelected: (destination) {
-      Provider.of<AppPath>(context, listen: false).path =
-      [CMCPath.chatOverview(), CMCPath.groupOverview()][destination];
-    },
-  );
+  Widget build(BuildContext context) => Drawer(
+        child: child,
+      );
 }

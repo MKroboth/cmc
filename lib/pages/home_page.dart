@@ -20,11 +20,18 @@ import 'package:cmc/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends Page {
+  static const int chat = 0;
+  static const int room = 1;
+
+  final int selectedTab;
+
+  HomePage([this.selectedTab = HomePage.chat]);
+
   @override
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
       settings: this,
-      builder: (BuildContext context) => HomeScreen(),
+      builder: (BuildContext context) => HomeScreen(selectedTab),
     );
   }
 }

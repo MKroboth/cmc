@@ -39,10 +39,10 @@ class CMCRouterDelegate extends RouterDelegate<CMCPath>
   late CMCLoginInfo loginState;
 
   final simplePages = <CMCPathType, Page>{
-    CMCPathType.Home: HomePage(),
+    CMCPathType.Home: HomePage(HomePage.chat),
     CMCPathType.Login: LoginPage(),
-    CMCPathType.ChatOverview: ChatPage(),
-    CMCPathType.GroupOverview: GroupsPage(),
+    CMCPathType.ChatOverview: HomePage(HomePage.chat),
+    CMCPathType.GroupOverview: HomePage(HomePage.room),
     CMCPathType.Unknown: UnknownPage()
   };
 
@@ -83,12 +83,22 @@ class CMCRouterDelegate extends RouterDelegate<CMCPath>
 
   @override
   SynchronousFuture<void> setNewRoutePath(CMCPath configuration) {
+    CMCPath oldPath = _currentPath;
+
     if (loginState.isLoggedIn) {
       _currentPath = configuration;
     } else {
       _currentPath = CMCPath.login();
     }
-    notifyListeners();
+
+    if (!((oldPath.isChatOverview ||
+            oldPath.isGroupOverview ||
+            oldPath.isHome) &&
+        (_currentPath.isHome ||
+            _currentPath.isGroupOverview ||
+            currentConfiguration.isChatOverview))) {
+      notifyListeners();
+    }
     return SynchronousFuture<void>(null);
   }
 }

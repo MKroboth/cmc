@@ -16,6 +16,8 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'dart:async';
+
 import 'package:cmc/cmc/app_path.dart';
 import 'package:cmc/cmc/cmc_path.dart';
 import 'package:cmc/data/login_info.dart';
@@ -36,22 +38,22 @@ class LoginWidget extends StatelessWidget {
         return null;
       },
       onLogin: (LoginData loginData) async {
-        try {
-          final status =
-              await _loginManager.login(loginData.name, loginData.password);
-          Provider.of<CMCLoginInfo>(context, listen: false).loginStatus =
-              status;
-        } on LoginError catch (e) {
-          return e.error();
-        }
-        return null;
+        return await _loginManager
+            .login(loginData.name, loginData.password)
+            .then<String?>((value) {
+              Provider.of<CMCLoginInfo>(context, listen: false).loginStatus =
+                  value;
+              return null;
+            })
+            .timeout(Duration(seconds: 30))
+            .onError<TimeoutException>((error, stackTrace) => error.toString())
+            .onError<LoginError>((error, stackTrace) => error.message);
       },
       messages: LoginMessages(userHint: "Matrix ID"),
       userType: LoginUserType.name,
       onSubmitAnimationCompleted: () {
-        Navigator.pop(context);
-        Provider.of<AppPath>(context, listen: false).path =
-            CMCPath.chatOverview();
+        Navigator.popUntil(context, (_) => !Navigator.canPop(context));
+        Provider.of<AppPath>(context, listen: false).path = CMCPath.home();
       },
       userValidator: (input) {
         try {

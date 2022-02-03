@@ -16,27 +16,20 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/cmc/app_path.dart';
-import 'package:cmc/cmc/cmc_path.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-@Deprecated("")
-class AppNavbar extends StatelessWidget {
-  final int selectedIndex;
-
-  AppNavbar({required this.selectedIndex});
+class CMCAppBar extends StatelessWidget implements PreferredSizeWidget {
+  late Size _preferredSize = Size.zero;
 
   @override
-  Widget build(BuildContext context) => NavigationBar(
-    destinations: [
-      NavigationDestination(icon: Icon(Icons.chat), label: "Chat"),
-      NavigationDestination(icon: Icon(Icons.group), label: "Groups"),
-    ],
-    selectedIndex: selectedIndex,
-    onDestinationSelected: (destination) {
-      Provider.of<AppPath>(context, listen: false).path =
-      [CMCPath.chatOverview(), CMCPath.groupOverview()][destination];
-    },
-  );
+  Widget build(BuildContext context) {
+    final result = AppBar(
+      title: Text("CMC"),
+    );
+    _preferredSize = result.preferredSize;
+    return result;
+  }
+
+  @override
+  Size get preferredSize => _preferredSize;
 }

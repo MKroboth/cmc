@@ -19,6 +19,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:matrix/matrix.dart';
 
 class ChatOverviewListItem extends StatelessWidget {
@@ -59,10 +60,13 @@ class ChatOverviewListItem extends StatelessWidget {
                       profile.userId.localpart ??
                       profile.userId,
                 ),
-                Text(
-                  profile.userId,
-                  style: Theme.of(context).textTheme.caption,
-                )
+                ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 230),
+                    child: Text(
+                      profile.userId,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.caption,
+                    ))
               ],
             ),
           ],
