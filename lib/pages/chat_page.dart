@@ -16,7 +16,8 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/screens/chat_screen.dart';
+import 'package:cmc/pages/home_page.dart';
+import 'package:cmc/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class ChatPage extends Page {
@@ -24,7 +25,7 @@ class ChatPage extends Page {
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
       settings: this,
-      builder: (BuildContext context) => ChatScreen(),
+      builder: (BuildContext context) => HomeScreen(selectedTab: HomePage.chat),
     );
   }
 }

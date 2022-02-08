@@ -31,7 +31,9 @@ class HomePage extends Page {
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
       settings: this,
-      builder: (BuildContext context) => HomeScreen(selectedTab),
+      builder: (BuildContext context) => HomeScreen(
+        selectedTab: selectedTab,
+      ),
     );
   }
 }

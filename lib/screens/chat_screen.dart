@@ -16,11 +16,8 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/cmc/app_navbar.dart';
 import 'package:cmc/data/login_info.dart';
-import 'package:cmc/widgets/CMCAppBar.dart';
-import 'package:cmc/widgets/ChatOverviewListItem.dart';
-import 'package:cmc/widgets/cmc_drawer.dart';
+import 'package:cmc/widgets/chat_overview_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,23 +32,8 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   @override
-  Widget build(BuildContext context) => widget.embed
-      ? _buildBody(context)
-      : Scaffold(
-          appBar: CMCAppBar(),
-          body: CMCDrawer(
-            child: _buildBody(context),
-          ),
-          bottomNavigationBar: AppNavbar(
-            selectedIndex: 0,
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              // TODO: Animate button expansion to fullscreen; open screen for beginning a new direct chat.
-            },
-            child: Text("+"),
-          ),
-        );
+  Widget build(BuildContext context) =>
+      widget.embed ? _buildBody(context) : throw "Not supported!";
 
   Widget _buildBody(BuildContext context) {
     final loginInfo = Provider.of<CMCLoginInfo>(context);

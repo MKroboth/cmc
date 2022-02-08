@@ -28,11 +28,13 @@ class CMCApp extends StatelessWidget {
   // for CMCAppContent.
 
   @override
-  Widget build(BuildContext context) => MultiProvider(
-        providers: [
-          theme_provider.provider,
-          login_provider.provider,
-        ],
-        child: CMCAppContent(),
-      );
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        theme_provider.provider,
+        login_provider.provider,
+      ],
+      child: CMCAppContent(),
+    );
+  }
 }

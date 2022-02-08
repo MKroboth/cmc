@@ -16,26 +16,30 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:cmc/cmc/app_path.dart';
+import 'package:cmc/cmc/cmc_path.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:matrix/matrix.dart';
+import 'package:provider/provider.dart';
 
 class RoomOverviewListItem extends StatelessWidget {
-  Client _client;
-  Room _room;
+  final Client _client;
+  final Room _room;
 
   RoomOverviewListItem(this._client, this._room);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(4),
-      child: Padding(
+    return ListTile(
+      leading: _buildCircleAvatar(context, _room),
+      onTap: () => Provider.of<AppPath>(context, listen: false).path =
+          CMCPath.openGroup(_room.id),
+      title: Padding(
         padding: EdgeInsets.all(4),
         child: Row(
           children: [
-            _buildCircleAvatar(context, _room),
             Padding(padding: EdgeInsets.symmetric(horizontal: 3.0)),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

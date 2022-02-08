@@ -16,16 +16,19 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:cmc/cmc/app_path.dart';
+import 'package:cmc/cmc/cmc_path.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:matrix/matrix.dart';
+import 'package:provider/provider.dart';
 
 class ChatOverviewListItem extends StatelessWidget {
-  Client _client;
-  String userId;
-  String roomId;
+  final Client _client;
+  final String userId;
+  final String roomId;
 
   ChatOverviewListItem(this._client, this.userId, this.roomId);
 
@@ -44,33 +47,30 @@ class ChatOverviewListItem extends StatelessWidget {
   }
 
   Widget _buildItem(BuildContext context, Profile profile) {
-    return Card(
-      margin: EdgeInsets.all(4),
-      child: Padding(
-        padding: EdgeInsets.all(4),
-        child: Row(
-          children: [
-            _buildCircleAvatar(context, profile),
-            Padding(padding: EdgeInsets.symmetric(horizontal: 3.0)),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  profile.displayName ??
-                      profile.userId.localpart ??
-                      profile.userId,
-                ),
-                ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 230),
-                    child: Text(
-                      profile.userId,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.caption,
-                    ))
-              ],
-            ),
-          ],
-        ),
+    return ListTile(
+      leading: _buildCircleAvatar(context, profile),
+      onTap: () => Provider.of<AppPath>(context, listen: false).path =
+          CMCPath.openChat(profile.userId),
+      title: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                profile.displayName ??
+                    profile.userId.localpart ??
+                    profile.userId,
+              ),
+              ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 230),
+                  child: Text(
+                    profile.userId,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.caption,
+                  ))
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -16,27 +16,19 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/cmc/app_path.dart';
-import 'package:cmc/cmc/cmc_path.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:cmc/logic/chat_controller.dart';
+import 'package:flutter/cupertino.dart';
 
-@Deprecated("")
-class AppNavbar extends StatelessWidget {
-  final int selectedIndex;
+class SendBar extends StatefulWidget {
+  final ChatController controller;
 
-  AppNavbar({required this.selectedIndex});
+  SendBar({required this.controller});
 
   @override
-  Widget build(BuildContext context) => NavigationBar(
-    destinations: [
-      NavigationDestination(icon: Icon(Icons.chat), label: "Chat"),
-      NavigationDestination(icon: Icon(Icons.group), label: "Groups"),
-    ],
-    selectedIndex: selectedIndex,
-    onDestinationSelected: (destination) {
-      Provider.of<AppPath>(context, listen: false).path =
-      [CMCPath.chatOverview(), CMCPath.groupOverview()][destination];
-    },
-  );
+  State<StatefulWidget> createState() => _ChatViewState();
+}
+
+class _ChatViewState extends State<SendBar> {
+  @override
+  Widget build(BuildContext context) => Placeholder();
 }

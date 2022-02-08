@@ -21,7 +21,6 @@ import 'dart:async';
 import 'package:cmc/data/login_info.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:matrix/encryption.dart';
 import 'package:matrix/matrix.dart';
 
 import 'login_error.dart';
@@ -36,7 +35,6 @@ class LoginManager {
         await db.open();
         return db;
       },
-      verificationMethods: {KeyVerificationMethod.emoji},
       supportedLoginTypes: {AuthenticationTypes.password},
     );
 
@@ -56,7 +54,6 @@ class LoginManager {
 
       assert(client.encryptionEnabled,
           "die if client does not support encryption");
-
       return CMCLoginStatus(
         accessToken: status.accessToken!,
         deviceId: status.deviceId!,

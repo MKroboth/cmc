@@ -16,16 +16,11 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/pages/home_page.dart';
-import 'package:cmc/screens/home_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_gen/gen_l10n/cmc_localizations.dart';
 
-class GroupsPage extends Page {
-  @override
-  Route createRoute(BuildContext context) {
-    return MaterialPageRoute(
-      settings: this,
-      builder: (BuildContext context) => HomeScreen(selectedTab: HomePage.room),
-    );
-  }
+extension Localization on BuildContext {
+  AppLocalizations get l10n => AppLocalizations.of(this)!;
+
+  AppLocalizations? get maybeL10N => AppLocalizations.of(this);
 }

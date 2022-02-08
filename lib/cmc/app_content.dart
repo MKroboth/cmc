@@ -19,7 +19,10 @@
 import 'package:cmc/cmc/cmc_path.dart';
 import 'package:cmc/cmc/route_information_parser.dart';
 import 'package:cmc/cmc/router_delegate.dart';
+import 'package:cmc/utils/localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/cmc_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'app_path.dart';
@@ -30,10 +33,10 @@ class CMCAppContent extends StatefulWidget {
 }
 
 class _CMCAppContentState extends State<CMCAppContent> {
-  CMCRouterDelegate _routerDelegate = CMCRouterDelegate();
-  CMCRouteInformationParser _routeInformationParser =
+  final CMCRouterDelegate _routerDelegate = CMCRouterDelegate();
+  final CMCRouteInformationParser _routeInformationParser =
       CMCRouteInformationParser();
-  PlatformRouteInformationProvider _platformRouteInformationProvider =
+  final PlatformRouteInformationProvider _platformRouteInformationProvider =
       PlatformRouteInformationProvider(
           initialRouteInformation: RouteInformation(location: '/'));
 
@@ -43,10 +46,16 @@ class _CMCAppContentState extends State<CMCAppContent> {
     return ChangeNotifierProvider<AppPath>(
         create: (context) => AppPath(CMCPath.home()),
         child: MaterialApp.router(
-          title: 'Cactis Matrix Client',
+          onGenerateTitle: (context) => context.l10n.fullApplicationName,
           routerDelegate: _routerDelegate,
           routeInformationParser: _routeInformationParser,
           routeInformationProvider: _platformRouteInformationProvider,
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            ...AppLocalizations.localizationsDelegates,
+          ],
         ));
   }
 }

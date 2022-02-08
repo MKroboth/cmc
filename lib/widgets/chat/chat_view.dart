@@ -16,16 +16,19 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/pages/home_page.dart';
-import 'package:cmc/screens/home_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:cmc/logic/chat_controller.dart';
+import 'package:flutter/cupertino.dart';
 
-class GroupsPage extends Page {
+class ChatView extends StatefulWidget {
+  final ChatController controller;
+
+  ChatView({required this.controller});
+
   @override
-  Route createRoute(BuildContext context) {
-    return MaterialPageRoute(
-      settings: this,
-      builder: (BuildContext context) => HomeScreen(selectedTab: HomePage.room),
-    );
-  }
+  State<StatefulWidget> createState() => _ChatViewState();
+}
+
+class _ChatViewState extends State<ChatView> {
+  @override
+  Widget build(BuildContext context) => Placeholder();
 }

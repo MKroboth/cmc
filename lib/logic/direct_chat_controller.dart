@@ -16,16 +16,6 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/pages/home_page.dart';
-import 'package:cmc/screens/home_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:cmc/logic/chat_controller.dart';
 
-class GroupsPage extends Page {
-  @override
-  Route createRoute(BuildContext context) {
-    return MaterialPageRoute(
-      settings: this,
-      builder: (BuildContext context) => HomeScreen(selectedTab: HomePage.room),
-    );
-  }
-}
+class DirectChatController extends ChatController {}

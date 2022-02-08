@@ -16,17 +16,45 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:cmc/logic/chat_controller.dart';
+import 'package:cmc/logic/chat_room_controller.dart';
+import 'package:cmc/utils/localization.dart';
+import 'package:cmc/widgets/chat/chat_view.dart';
+import 'package:cmc/widgets/chat/send_bar.dart';
 import 'package:flutter/material.dart';
 
-class OpenGroupScreen extends StatelessWidget {
-  final String groupID;
+class OpenRoomScreen extends StatefulWidget {
+  final String roomId;
+  final bool embed;
 
-  OpenGroupScreen(this.groupID);
+  OpenRoomScreen(this.roomId, {this.embed = false});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Center(
-          child: Text("Open Chat $groupID"),
-        ),
+  State<StatefulWidget> createState() => _OpenChatRoomState();
+}
+
+class _OpenChatRoomState extends State<OpenRoomScreen> {
+  late ChatController _chatController;
+
+  @override
+  void initState() {
+    _chatController = ChatRoomController(roomId: widget.roomId);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.embed
+      ? _buildBody(context)
+      : Scaffold(
+          appBar: AppBar(
+            title: Text(context.l10n.applicationTitle),
+          ),
+          body: _buildBody(context));
+
+  Widget _buildBody(BuildContext context) => Column(
+        children: [
+          ChatView(controller: _chatController),
+          SendBar(controller: _chatController)
+        ],
       );
 }

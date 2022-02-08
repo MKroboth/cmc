@@ -1,0 +1,24 @@
+{
+  "@@locale": "en",
+  "applicationTitle": "CMC",
+  "@applicationTitle": {
+    "description": "The applications name."
+  },
+  "@verify": {
+    "description": "verify, to verify something"
+  },
+  "verify": "verify",
+  "verification": "verification",
+  "fullApplicationName": "Cactis Matrix Client",
+  "@fullApplicationName": {
+    "description": "The applications full name."
+  },
+  "settings": "settings",
+  "@settings": {
+    "description": "The settings of an app."
+  },
+  "about": "about",
+  "@about": {
+    "description": "The title of the about page"
+  }
+}
