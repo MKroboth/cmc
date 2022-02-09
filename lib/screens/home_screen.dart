@@ -16,6 +16,8 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'dart:async';
+
 import 'package:cmc/cmc/app_path.dart';
 import 'package:cmc/cmc/cmc_path.dart';
 import 'package:cmc/data/login_info.dart';
@@ -121,59 +123,75 @@ class _HomeScreenWithClientState extends State<_HomeScreenWithClient> {
       return Offstage();
   }
 
+  late StreamSubscription _keyVerificationRequestSubscription;
+
+  @override
+  void initState() {
+    if (widget.loginInfo.isLoggedIn) {
+      final Client client = widget.loginInfo.loginStatus!.client;
+      _keyVerificationRequestSubscription =
+          client.onKeyVerificationRequest.stream.listen((event) {
+        event.onUpdate = () => Future.delayed(Duration.zero, () async {
+              print(
+                  "KeyVerificationRequest: ${event.state}, onUpdate: ${event.onUpdate}");
+              switch (event.state) {
+                case KeyVerificationState.askAccept:
+                  topNotifications.addDismissible(context,
+                      build: _buildVerificationAcceptRequestCard(
+                          event.acceptVerification),
+                      setState: setState,
+                      dismiss: () => event.cancel("m.user"));
+
+                  break;
+                case KeyVerificationState.askSSSS:
+                  // TODO: Handle this case.
+                  break;
+                case KeyVerificationState.waitingAccept:
+                  // TODO: Handle this case.
+                  break;
+                case KeyVerificationState.askSas:
+                  showDialog(
+                      context: context,
+                      builder: _verifySas(event.sasNumbers, event.sasEmojis,
+                          event.acceptSas, event.rejectSas));
+                  // TODO: Handle this case.
+                  break;
+                case KeyVerificationState.waitingSas:
+                  break;
+                case KeyVerificationState.done:
+                  // TODO: Handle this case.
+                  setState(() {
+                    topNotifications.clear();
+                  });
+                  break;
+                case KeyVerificationState.error:
+                  setState(() {
+                    topNotifications.clear();
+                  });
+                  break;
+              }
+            });
+        event.onUpdate!();
+      });
+      client.onSyncStatus.stream.listen((event) {
+        setState(() {});
+      });
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _keyVerificationRequestSubscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!widget.loginInfo.isLoggedIn) {
       return CircularProgressIndicator();
     }
-
     final Client client = widget.loginInfo.loginStatus!.client;
-    client.onKeyVerificationRequest.stream.listen((event) {
-      event.onUpdate = () => Future.delayed(Duration.zero, () async {
-            print(
-                "KeyVerificationRequest: ${event.state}, onUpdate: ${event.onUpdate}");
-            switch (event.state) {
-              case KeyVerificationState.askAccept:
-                topNotifications.addDismissible(context,
-                    build: _buildVerificationAcceptRequestCard(
-                        event.acceptVerification),
-                    setState: setState,
-                    dismiss: () => event.cancel("m.user"));
-
-                break;
-              case KeyVerificationState.askSSSS:
-                // TODO: Handle this case.
-                break;
-              case KeyVerificationState.waitingAccept:
-                // TODO: Handle this case.
-                break;
-              case KeyVerificationState.askSas:
-                showDialog(
-                    context: context,
-                    builder: _verifySas(event.sasNumbers, event.sasEmojis,
-                        event.acceptSas, event.rejectSas));
-                // TODO: Handle this case.
-                break;
-              case KeyVerificationState.waitingSas:
-                break;
-              case KeyVerificationState.done:
-                // TODO: Handle this case.
-                setState(() {
-                  topNotifications.clear();
-                });
-                break;
-              case KeyVerificationState.error:
-                setState(() {
-                  topNotifications.clear();
-                });
-                break;
-            }
-          });
-      event.onUpdate!();
-    });
-    client.onSyncStatus.stream.listen((event) {
-      setState(() {});
-    });
 
     return DefaultTabController(
       initialIndex: widget.initialTab,
@@ -184,8 +202,6 @@ class _HomeScreenWithClientState extends State<_HomeScreenWithClient> {
         ),
         body: Column(
           children: [
-            client.onSyncStatus.stream
-                .newBuilder(onSuccess: _buildSyncStatusIndicator),
             ListView.builder(
               itemBuilder: (context, index) => topNotifications[index],
               shrinkWrap: true,

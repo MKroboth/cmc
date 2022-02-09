@@ -22,12 +22,14 @@ import 'package:cmc/utils/localization.dart';
 import 'package:cmc/widgets/chat/chat_view.dart';
 import 'package:cmc/widgets/chat/send_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:matrix/matrix.dart' as matrix;
 
 class OpenChatScreen extends StatefulWidget {
   final String chatID;
+  final matrix.Client client;
   final bool embed;
 
-  OpenChatScreen(this.chatID, {this.embed = false});
+  OpenChatScreen(this.chatID, {required this.client, this.embed = false});
 
   @override
   State<StatefulWidget> createState() => _OpenChatScreenState();
@@ -38,7 +40,8 @@ class _OpenChatScreenState extends State<OpenChatScreen> {
 
   @override
   void initState() {
-    _chatController = DirectChatController();
+    _chatController =
+        DirectChatController(chatId: widget.chatID, client: widget.client);
     super.initState();
   }
 
@@ -53,7 +56,7 @@ class _OpenChatScreenState extends State<OpenChatScreen> {
 
   Widget _buildBody(BuildContext context) => Column(
         children: [
-          ChatView(controller: _chatController),
+          Expanded(child: ChatView(controller: _chatController)),
           SendBar(controller: _chatController)
         ],
       );

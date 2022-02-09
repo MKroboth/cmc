@@ -16,25 +16,30 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:cmc/data/login_info.dart';
-import 'package:cmc/screens/open_group_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+enum ChatEventType {
+  Null,
+  PlainMessage,
+}
 
-class OpenRoomPage extends Page {
-  final String value;
+class NullChatEvent extends ChatEvent {
+  const NullChatEvent() : super(ChatEventType.Null);
+}
 
-  OpenRoomPage(this.value);
+class PlainMessage extends ChatEvent {
+  final bool fromSelf;
+  final String content;
 
-  @override
-  Route createRoute(BuildContext context) {
-    return MaterialPageRoute(
-      settings: this,
-      builder: (BuildContext context) => Consumer<CMCLoginInfo>(
-          builder: (context, info, _) => OpenRoomScreen(
-                value,
-                client: info.loginStatus!.client,
-              )),
-    );
-  }
+  const PlainMessage(this.fromSelf, this.content)
+      : super(ChatEventType.PlainMessage);
+}
+
+abstract class ChatEvent {
+  final ChatEventType type;
+
+  const ChatEvent(this.type);
+
+  static NullChatEvent nullEvent() => NullChatEvent();
+
+  static PlainMessage plainMessage(bool fromSelf, String content) =>
+      PlainMessage(fromSelf, content);
 }

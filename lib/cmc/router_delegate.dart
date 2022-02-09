@@ -49,7 +49,7 @@ class CMCRouterDelegate extends RouterDelegate<CMCPath>
   final complexPages = <CMCPathType, Page Function(String)>{
     CMCPathType.Settings: (id) => SettingsPage(id),
     CMCPathType.OpenChat: (id) => OpenChatPage(id),
-    CMCPathType.OpenGroup: (id) => OpenGroupPage(id),
+    CMCPathType.OpenGroup: (id) => OpenRoomPage(id),
   };
 
   @override

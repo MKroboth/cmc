@@ -22,12 +22,14 @@ import 'package:cmc/utils/localization.dart';
 import 'package:cmc/widgets/chat/chat_view.dart';
 import 'package:cmc/widgets/chat/send_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:matrix/matrix.dart' as matrix;
 
 class OpenRoomScreen extends StatefulWidget {
+  final matrix.Client client;
   final String roomId;
   final bool embed;
 
-  OpenRoomScreen(this.roomId, {this.embed = false});
+  OpenRoomScreen(this.roomId, {required this.client, this.embed = false});
 
   @override
   State<StatefulWidget> createState() => _OpenChatRoomState();
@@ -38,7 +40,8 @@ class _OpenChatRoomState extends State<OpenRoomScreen> {
 
   @override
   void initState() {
-    _chatController = ChatRoomController(roomId: widget.roomId);
+    _chatController =
+        ChatRoomController(roomId: widget.roomId, client: widget.client);
     super.initState();
   }
 

@@ -17,7 +17,7 @@
  */
 
 import 'package:cmc/logic/chat_controller.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class SendBar extends StatefulWidget {
   final ChatController controller;
@@ -28,7 +28,76 @@ class SendBar extends StatefulWidget {
   State<StatefulWidget> createState() => _ChatViewState();
 }
 
-class _ChatViewState extends State<SendBar> {
+class _ChatViewState extends State<SendBar>
+    with SingleTickerProviderStateMixin {
+  late AnimationController menuAnimation;
+
+  bool _isExpanded = false;
+
   @override
-  Widget build(BuildContext context) => Placeholder();
+  void initState() {
+    super.initState();
+    menuAnimation = AnimationController(
+      duration: const Duration(milliseconds: 250),
+      vsync: this,
+    );
+  }
+
+  String _currentString = "";
+
+  void _commitText(String string) {
+    widget.controller.commitText(string);
+  }
+
+  @override
+  Widget build(BuildContext context) => Row(
+        children: [
+          Expanded(
+            child: TextField(
+              onChanged: (str) {
+                _currentString = str;
+              },
+              onSubmitted: (str) {
+                _commitText(str);
+              },
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.send),
+                    onPressed: () {
+                      _commitText(_currentString);
+                    },
+                  )),
+            ),
+          ),
+        ],
+      );
+}
+
+class _ChatViewFlowDelegate extends FlowDelegate {
+  _ChatViewFlowDelegate({required this.menuAnimation})
+      : super(repaint: menuAnimation);
+
+  final Animation<double> menuAnimation;
+
+  @override
+  bool shouldRepaint(_ChatViewFlowDelegate oldDelegate) {
+    return menuAnimation != oldDelegate.menuAnimation;
+  }
+
+  @override
+  void paintChildren(FlowPaintingContext context) {
+    double dx = 0.0;
+    for (int i = 0; i < context.childCount; ++i) {
+      dx = context.getChildSize(i)!.width * i;
+      context.paintChild(
+        i,
+        transform: Matrix4.translationValues(
+          dx * menuAnimation.value,
+          0,
+          0,
+        ),
+      );
+    }
+  }
 }

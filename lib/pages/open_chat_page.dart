@@ -16,8 +16,10 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:cmc/data/login_info.dart';
 import 'package:cmc/screens/open_chat_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class OpenChatPage extends Page {
   final String value;
@@ -28,7 +30,11 @@ class OpenChatPage extends Page {
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
       settings: this,
-      builder: (BuildContext context) => OpenChatScreen(value),
+      builder: (BuildContext context) => Consumer<CMCLoginInfo>(
+          builder: (context, info, _) => OpenChatScreen(
+                value,
+                client: info.loginStatus!.client,
+              )),
     );
   }
 }

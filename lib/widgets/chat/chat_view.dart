@@ -17,7 +17,10 @@
  */
 
 import 'package:cmc/logic/chat_controller.dart';
+import 'package:cmc/widgets/chat/chat_element.dart';
 import 'package:flutter/cupertino.dart';
+
+import 'chat_event.dart';
 
 class ChatView extends StatefulWidget {
   final ChatController controller;
@@ -30,5 +33,29 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   @override
-  Widget build(BuildContext context) => Placeholder();
+  void initState() {
+    widget.controller.register(_addChatItemCallback);
+    super.initState();
+  }
+
+  final _chatElements = <Widget>[];
+
+  void _addChatItemCallback(ChatEvent element) {
+    switch (element.type) {
+      case ChatEventType.Null:
+        // TODO: Handle this case.
+        break;
+      case ChatEventType.PlainMessage:
+        setState(() {
+          _chatElements
+              .add(ChatElement(child: Text((element as PlainMessage).content)));
+        });
+        break;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => ListView(
+        children: _chatElements,
+      );
 }

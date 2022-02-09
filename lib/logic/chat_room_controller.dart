@@ -17,9 +17,67 @@
  */
 
 import 'package:cmc/logic/chat_controller.dart';
+import 'package:cmc/widgets/chat/chat_event.dart';
+import 'package:matrix/matrix.dart' as matrix;
 
 class ChatRoomController extends ChatController {
   final String roomId;
+  final matrix.Client client;
+  final matrix.Room room;
 
-  ChatRoomController({required this.roomId});
+  ChatRoomController({required this.roomId, required this.client})
+      : room = matrix.Room(client: client, id: roomId);
+
+  @override
+  String get name => room.name;
+
+  @override
+  void commitText(String string) {
+    // TODO: implement commitText
+  }
+
+  @override
+  void register(void Function(ChatEvent element) addChatItemCallback) {
+    room.onUpdate.stream.listen((event) {
+      addChatItemCallback(ChatEvent.nullEvent());
+    });
+
+    room.requestHistory();
+    client.onEvent.stream.listen((matrix.EventUpdate event) async {
+      if (event.roomID != roomId) {
+        // Not for us.
+        return;
+      }
+
+      final content = await event.decrypt(room);
+      final ev = matrix.Event.fromJson(content.content, room);
+
+      switch (event.type) {
+        case matrix.EventUpdateType.timeline:
+          final timelineUpdate =
+              matrix.TimelineUpdate.fromJson(content.content);
+
+          // TODO: Handle this case.
+          break;
+        case matrix.EventUpdateType.state:
+          // TODO: Handle this case.
+          break;
+        case matrix.EventUpdateType.history:
+          addChatItemCallback(ChatEvent.plainMessage(
+              ev.sender.id == client.userID!, ev.plaintextBody));
+
+          // TODO: Handle this case.
+          break;
+        case matrix.EventUpdateType.accountData:
+          // TODO: Handle this case.
+          break;
+        case matrix.EventUpdateType.ephemeral:
+          // TODO: Handle this case.
+          break;
+        case matrix.EventUpdateType.inviteState:
+          // TODO: Handle this case.
+          break;
+      }
+    });
+  }
 }

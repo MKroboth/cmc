@@ -16,4 +16,12 @@
  *  with Cactis CMC. If not, see <https://www.gnu.org/licenses/>.
  */
 
-abstract class ChatController {}
+import 'package:cmc/widgets/chat/chat_event.dart';
+
+abstract class ChatController {
+  String get name;
+
+  void commitText(String string);
+
+  void register(void Function(ChatEvent element) addChatItemCallback);
+}
